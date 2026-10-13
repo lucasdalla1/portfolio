@@ -1,0 +1,45 @@
+---
+import { site } from '../data/site';
+import ThemeToggle from './ThemeToggle.astro';
+import { icons } from '../data/icons';
+
+const items = [
+  {
+    label: 'GitHub',
+    href: site.links.github,
+    path: icons.github,
+  },
+  {
+    label: 'LinkedIn',
+    href: site.links.linkedin,
+    path: icons.linkedin,
+  },
+  {
+    label: 'E-mail',
+    href: `mailto:${site.email}`,
+    path: icons.email,
+  },
+];
+---
+
+<ul class="flex items-center gap-1">
+  {
+    items.map((i) => (
+      <li>
+        <a
+          href={i.href}
+          target={i.href.startsWith('http') ? '_blank' : undefined}
+          rel="noreferrer"
+          class="inline-flex size-9 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-ink"
+          aria-label={i.label}
+          title={i.label}
+        >
+          <svg viewBox="0 0 24 24" class="size-[18px]" fill="currentColor" aria-hidden="true">
+            <path d={i.path} />
+          </svg>
+        </a>
+      </li>
+    ))
+  }
+  <li class="ml-1 border-l border-line pl-2"><ThemeToggle /></li>
+</ul>

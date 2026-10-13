@@ -1,0 +1,250 @@
+---
+import Base from '../layouts/Base.astro';
+import Social from '../components/Social.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import Tags from '../components/Tags.astro';
+import Footer from '../components/Footer.astro';
+import { site, nav, experience } from '../data/site';
+import { principios } from '../data/principios';
+import { icons } from '../data/icons';
+
+const h2 = 'font-semibold text-ink';
+
+const contatos = [
+  // Mesma ordem do cabeçalho (Social.astro)
+  { label: 'GitHub', href: site.links.github, icon: icons.github, external: true },
+  { label: 'LinkedIn', href: site.links.linkedin, icon: icons.linkedin, external: true },
+  // TODO(lucas): colocar o PDF em public/curriculo.pdf e descomentar
+  // { label: 'Currículo (PDF)', href: '/curriculo.pdf', icon: icons.document, external: false },
+];
+const section = 'reveal-scroll mt-20';
+---
+
+<Base>
+  <!-- Barra que aparece ao rolar, quando o cabeçalho sai da tela -->
+  <div
+    data-topbar
+    inert
+    class="fixed inset-x-0 top-0 z-30 -translate-y-full border-b border-line bg-bg/85 backdrop-blur transition-transform duration-300 data-[show=true]:translate-y-0"
+  >
+    <div class="mx-auto flex h-14 max-w-[44rem] items-center justify-between gap-4 px-6">
+      <a href="#topo" class="font-bold tracking-[-0.02em] text-ink">{site.shortName}</a>
+      <nav aria-label="Seções" class="hidden sm:block">
+        <ul class="flex items-center gap-5 text-sm">
+          {nav.filter((n) => n.id !== 'sobre').map((n) => (
+            <li>
+              <a href={`#${n.id}`} data-nav={n.id} class="group text-muted transition-colors hover:text-ink aria-[current=true]:text-ink">
+                <span class="hl-hover">{n.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div class="-mr-2"><ThemeToggle /></div>
+    </div>
+  </div>
+
+  <main id="conteudo" class="mx-auto max-w-[44rem] px-6 pt-14 pb-10 sm:pt-24">
+    <header id="topo" data-header class="reveal">
+      <div class="flex items-center justify-between gap-4">
+        <h1 class="text-2xl font-bold tracking-[-0.02em] text-ink">{site.shortName}</h1>
+        <div class="-mr-2"><Social /></div>
+      </div>
+      <p class="mt-1 text-muted">{site.role} · {site.location}</p>
+    </header>
+
+    <!-- Sobre -->
+    <section id="sobre" aria-label="Sobre" class="reveal mt-14 grid gap-4 text-[1.05rem] leading-relaxed text-muted" style="--d: .08s">
+      <p>
+        Sou desenvolvedor full stack há três anos na {' '}
+        <a href={experience[0].companyUrl} target="_blank" rel="noreferrer" class="text-ink underline decoration-line underline-offset-4 hover:decoration-accent">Mindtec</a>,
+        onde comecei como estagiário e hoje trabalho como júnior em sistemas web com {' '}
+        <mark class="hl hl-draw text-ink" style="--d: .5s">Laravel e SQL Server</mark>.
+      </p>
+      <p>
+        Em projetos pessoais, busco ir além da stack do dia a dia: TypeScript, React, Next.js, Node.js, PostgreSQL,
+        Python e Rust.
+      </p>
+      <p>
+        Uso {' '}
+        <mark class="hl hl-draw text-ink" style="--d: .9s">IA como ferramenta de engenharia</mark>: com contexto,
+        revisão e testes, para entregar mais rápido sem abrir mão da qualidade.
+      </p>
+    </section>
+
+    <!-- Experiência -->
+    <section id="experiencia" aria-labelledby="experiencia-titulo" class={section}>
+      <h2 id="experiencia-titulo" class={h2}>Experiência</h2>
+      <ul class="mt-4 grid gap-6">
+        {experience.map((e) => (
+          <li>
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+              <h3 class="text-ink">
+                {e.role} {' '}
+                <span class="text-muted">· <a href={e.companyUrl} target="_blank" rel="noreferrer" class="hover:text-ink">{e.company}</a></span>
+              </h3>
+              <p class="font-mono text-xs text-muted">{e.period}</p>
+            </div>
+            <p class="mt-1.5 text-[0.95rem] leading-relaxed text-muted">{e.description}</p>
+            <div class="mt-2.5"><Tags items={e.stack} /></div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- Projetos -->
+    <!-- TODO(lucas): seção de projetos em revisão -->
+    <section id="projetos" aria-labelledby="projetos-titulo" class={section}>
+      <h2 id="projetos-titulo" class={h2}>Projetos</h2>
+      <p class="mt-4 text-muted">Em breve.</p>
+    </section>
+
+    <!-- Como trabalho -->
+    <section id="como-trabalho" aria-labelledby="como-trabalho-titulo" class={section}>
+      <h2 id="como-trabalho-titulo" class={h2}>Como trabalho</h2>
+      <p class="mt-4 leading-relaxed text-muted">
+        Uso agentes de IA, como o Claude Code, no dia a dia. A qualidade do resultado depende mais do processo do
+        que do prompt.
+      </p>
+      <ul class="mt-4 divide-y divide-line border-y border-line text-[0.95rem]">
+        {principios.map((p) => (
+          <li class="grid gap-x-4 py-3 sm:grid-cols-[13.5rem_1fr]">
+            <span class="text-ink">{p.title}</span>
+            <span class="text-muted">{p.text}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" aria-labelledby="contato-titulo" class={section}>
+      <h2 id="contato-titulo" class={h2}>Contato</h2>
+      <p class="mt-4 leading-relaxed text-muted">Aberto a conversas sobre oportunidades e projetos.</p>
+      <div class="mt-3 flex items-center gap-2">
+        <a href={`mailto:${site.email}`} class="group min-w-0 text-xl font-semibold tracking-[-0.01em] break-all text-ink sm:text-2xl">
+          <span class="hl-hover">{site.email}</span>
+        </a>
+        <button
+          type="button"
+          data-copy={site.email}
+          class="group/copy relative inline-flex size-9 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface hover:text-ink"
+          aria-label="Copiar e-mail"
+          title="Copiar e-mail"
+        >
+          <!-- copiar -->
+          <svg data-icon="copy" viewBox="0 0 24 24" class="size-[18px]" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="11" height="11" rx="2" />
+            <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+          </svg>
+          <!-- copiado -->
+          <svg data-icon="check" viewBox="0 0 24 24" class="hidden size-[18px] text-accent" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m5 12.5 4.5 4.5L19 7.5" />
+          </svg>
+        </button>
+        <span data-copy-status role="status" class="text-sm text-muted"></span>
+      </div>
+      <ul class="mt-6 flex flex-wrap gap-2 text-sm">
+        {contatos.map((c) => (
+          <li>
+            <a
+              href={c.href}
+              target={c.external ? '_blank' : undefined}
+              rel={c.external ? 'noreferrer' : undefined}
+              class="inline-flex items-center gap-2 rounded-full border border-line py-1.5 pr-3.5 pl-3 text-muted transition-colors hover:border-muted/50 hover:text-ink"
+            >
+              <svg viewBox="0 0 24 24" class="size-4" fill="currentColor" aria-hidden="true"><path d={c.icon} /></svg>
+              {c.label}
+              <span aria-hidden="true" class="opacity-60">{c.external ? '↗' : '↓'}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <Footer />
+  </main>
+</Base>
+
+<script>
+  function init() {
+    const cleanups: (() => void)[] = [];
+
+    // Barra do topo: aparece quando o cabeçalho sai da tela
+    const header = document.querySelector('[data-header]');
+    const topbar = document.querySelector<HTMLElement>('[data-topbar]');
+    if (header && topbar) {
+      const io = new IntersectionObserver(([e]) => {
+        const show = !e.isIntersecting;
+        topbar.dataset.show = String(show);
+        topbar.inert = !show;
+      });
+      io.observe(header);
+      cleanups.push(() => io.disconnect());
+    }
+
+    // Marca-texto na seção atual
+    const links = document.querySelectorAll<HTMLAnchorElement>('[data-nav]');
+    const setActive = (id: string) =>
+      links.forEach((l) => {
+        const on = String(l.dataset.nav === id);
+        l.setAttribute('aria-current', on);
+        l.querySelector('.hl-hover')?.setAttribute('aria-current', on);
+      });
+    const spy = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: '-35% 0px -60% 0px' },
+    );
+    const sections = document.querySelectorAll('main section[id]');
+    sections.forEach((s) => spy.observe(s));
+    cleanups.push(() => spy.disconnect());
+
+    // A última seção nunca chega ao meio da tela; no fim da página, marca ela
+    const onScroll = () => {
+      const last = sections[sections.length - 1];
+      if (last && innerHeight + scrollY >= document.documentElement.scrollHeight - 4) setActive(last.id);
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    cleanups.push(() => removeEventListener('scroll', onScroll));
+
+    // Seções aparecem ao rolar
+    const reveal = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-in');
+          reveal.unobserve(e.target);
+        }),
+      { rootMargin: '0px 0px -10% 0px' },
+    );
+    document.querySelectorAll('.reveal-scroll').forEach((el) => reveal.observe(el));
+    cleanups.push(() => reveal.disconnect());
+
+    // Copiar e-mail
+    const copyBtn = document.querySelector<HTMLButtonElement>('[data-copy]');
+    const copyStatus = document.querySelector<HTMLElement>('[data-copy-status]');
+    if (copyBtn && copyStatus) {
+      let timer: number | undefined;
+      copyBtn.onclick = async () => {
+        let ok = true;
+        try {
+          await navigator.clipboard.writeText(copyBtn.dataset.copy!);
+        } catch {
+          ok = false;
+        }
+        copyBtn.querySelector('[data-icon="copy"]')?.classList.toggle('hidden', ok);
+        copyBtn.querySelector('[data-icon="check"]')?.classList.toggle('hidden', !ok);
+        copyStatus.textContent = ok ? 'Copiado' : 'Não deu para copiar. Selecione o e-mail.';
+        clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          copyBtn.querySelector('[data-icon="copy"]')?.classList.remove('hidden');
+          copyBtn.querySelector('[data-icon="check"]')?.classList.add('hidden');
+          copyStatus.textContent = '';
+        }, 2000);
+      };
+      cleanups.push(() => clearTimeout(timer));
+    }
+
+    document.addEventListener('astro:before-swap', () => cleanups.forEach((fn) => fn()), { once: true });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>
