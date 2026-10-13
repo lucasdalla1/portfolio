@@ -172,3 +172,37 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .js .reveal-scroll { opacity: 1; transform: none; transition: none; }
 }
+
+/*
+ * Destaques expansíveis (<details>) da Experiência.
+ * Onde o navegador suporta, a altura anima com ::details-content;
+ * nos demais, o conteúdo só aparece com fade.
+ */
+:root { interpolate-size: allow-keywords; }
+
+.highlight summary::-webkit-details-marker { display: none; }
+
+.highlight::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition: block-size 0.3s ease, content-visibility 0.3s allow-discrete;
+}
+.highlight[open]::details-content { block-size: auto; }
+
+.highlight[open] .highlight-body { animation: highlight-in 0.3s ease both; }
+
+@keyframes highlight-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.highlight-chevron { transition: transform 0.25s ease; }
+.highlight[open] .highlight-chevron { transform: rotate(180deg); }
+/* Item aberto mantém o marca-texto no título */
+.highlight[open] .hl-hover { --hl-size: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .highlight::details-content { transition: none; }
+  .highlight[open] .highlight-body { animation: none; }
+  .highlight-chevron { transition: none; }
+}

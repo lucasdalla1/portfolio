@@ -75,7 +75,7 @@ const section = 'reveal-scroll mt-20';
     <!-- Experiência -->
     <section id="experiencia" aria-labelledby="experiencia-titulo" class={section}>
       <h2 id="experiencia-titulo" class={h2}>Experiência</h2>
-      <ul class="mt-4 grid gap-6">
+      <ul class="mt-4 grid gap-10">
         {experience.map((e) => (
           <li>
             <div class="flex flex-wrap items-baseline justify-between gap-x-4">
@@ -86,7 +86,31 @@ const section = 'reveal-scroll mt-20';
               <p class="font-mono text-xs text-muted">{e.period}</p>
             </div>
             <p class="mt-1.5 text-[0.95rem] leading-relaxed text-muted">{e.description}</p>
-            <div class="mt-2.5"><Tags items={e.stack} /></div>
+            <ul class="mt-3 grid gap-2 text-[0.95rem] leading-relaxed text-muted">
+              {e.highlights.map((h) => (
+                <li class="relative pl-4 before:absolute before:top-[0.7em] before:left-0 before:h-px before:w-2 before:bg-accent">
+                  {h.details ? (
+                    <details class="highlight">
+                      <summary class="group cursor-pointer list-none rounded-sm">
+                        <span class="text-ink"><span class="hl-hover">{h.title}</span></span> — {h.summary}
+                        <span class="ml-1 inline-flex translate-y-[2px] items-center text-muted transition-colors group-hover:text-ink" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" class="highlight-chevron size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                        </span>
+                      </summary>
+                      <ul class="highlight-body grid gap-1.5 pt-2 pb-1 text-[0.9rem]">
+                        {h.details.map((d) => <li class="relative pl-3.5 before:absolute before:top-[0.65em] before:left-0 before:size-1 before:rounded-full before:bg-muted/60">{d}</li>)}
+                      </ul>
+                    </details>
+                  ) : (
+                    <p><span class="text-ink">{h.title}</span> — {h.summary}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+            {e.also && (
+              <p class="mt-3 text-[0.9rem] leading-relaxed text-muted"><span class="text-ink">Também:</span> {e.also}</p>
+            )}
+            <div class="mt-3"><Tags items={e.stack} /></div>
           </li>
         ))}
       </ul>
