@@ -1,0 +1,174 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/schibsted-grotesk';
+@import '@fontsource-variable/jetbrains-mono';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* Tokens — claro */
+:root {
+  --bg: #f3f4f1;
+  --surface: #eaece7;
+  --ink: #16181d;
+  --muted: #5b616d;
+  --line: #dcdfd8;
+  --accent: #0b6e5b;
+  --hl: #a8eed6;
+  color-scheme: light;
+}
+
+/* Tokens — escuro */
+[data-theme='dark'] {
+  --bg: #101214;
+  --surface: #171a1d;
+  --ink: #e6e8eb;
+  --muted: #8e95a0;
+  --line: #262a2f;
+  --accent: #5fd9b8;
+  --hl: rgb(64 201 160 / 0.3);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --font-sans: 'Schibsted Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Altura da barra fixa do topo (3.5rem) + folga */
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--hl);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/*
+ * Assinatura: marca-texto.
+ * Desenhado com background para acompanhar quebras de linha; bordas
+ * irregulares imitam o traço de uma caneta real.
+ */
+.hl {
+  --hl-size: 100%;
+  background: linear-gradient(var(--hl), var(--hl)) no-repeat 0 88% / var(--hl-size) 62%;
+  border-radius: 0.18em 0.5em 0.25em 0.45em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0 0.12em;
+  margin: 0 -0.12em;
+  color: inherit;
+}
+
+.hl-draw {
+  animation: hl-draw 0.7s cubic-bezier(0.6, 0, 0.2, 1) both;
+  animation-delay: var(--d, 0.3s);
+}
+
+@keyframes hl-draw {
+  from { --hl-size: 0%; }
+  to { --hl-size: 100%; }
+}
+
+@property --hl-size {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+
+/* Marca-texto no hover (títulos de projeto, nav ativa) */
+.hl-hover {
+  --hl-size: 0%;
+  background: linear-gradient(var(--hl), var(--hl)) no-repeat 0 88% / var(--hl-size) 62%;
+  border-radius: 0.18em 0.5em 0.25em 0.45em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: --hl-size 0.35s cubic-bezier(0.6, 0, 0.2, 1);
+}
+
+.group:hover .hl-hover,
+.group:focus-visible .hl-hover,
+.hl-hover[aria-current='true'] {
+  --hl-size: 100%;
+}
+
+/* Entrada suave das seções */
+.reveal {
+  animation: reveal 0.6s ease-out both;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hl-draw, .reveal { animation: none; }
+  .hl-hover { transition: none; }
+}
+
+/* Texto longo dos estudos de caso */
+.prose-case h2 {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 2.5rem 0 0.75rem;
+}
+.prose-case p,
+.prose-case li {
+  color: var(--muted);
+  line-height: 1.7;
+}
+.prose-case p + p { margin-top: 1rem; }
+.prose-case strong { color: var(--ink); font-weight: 600; }
+.prose-case ul,
+.prose-case ol { margin: 0.5rem 0 0 1.1rem; display: grid; gap: 0.4rem; }
+.prose-case ul { list-style: disc; }
+.prose-case ol { list-style: decimal; }
+.prose-case li::marker { color: var(--accent); }
+.prose-case code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--surface);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.prose-case em { font-style: italic; color: var(--ink); }
+
+/* Revelação ao rolar (só com JS ativo; sem JS tudo aparece) */
+.js .reveal-scroll {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.js .reveal-scroll.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal-scroll { opacity: 1; transform: none; transition: none; }
+}
