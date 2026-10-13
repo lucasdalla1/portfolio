@@ -14,8 +14,8 @@ const contatos = [
   // Mesma ordem do cabeçalho (Social.astro)
   { label: 'GitHub', href: site.links.github, icon: icons.github, external: true },
   { label: 'LinkedIn', href: site.links.linkedin, icon: icons.linkedin, external: true },
-  // TODO(lucas): colocar o PDF em public/curriculo.pdf e descomentar
-  // { label: 'Currículo (PDF)', href: '/curriculo.pdf', icon: icons.document, external: false },
+  // Gerado com `pnpm curriculo`
+  { label: 'Currículo (PDF)', href: '/curriculo.pdf', icon: icons.document, external: false, download: 'Curriculo-Lucas-Dalla.pdf' },
 ];
 const section = 'reveal-scroll mt-20';
 ---
@@ -174,6 +174,7 @@ const section = 'reveal-scroll mt-20';
               href={c.href}
               target={c.external ? '_blank' : undefined}
               rel={c.external ? 'noreferrer' : undefined}
+              download={c.download}
               class="inline-flex items-center gap-2 rounded-full border border-line py-1.5 pr-3.5 pl-3 text-muted transition-colors hover:border-muted/50 hover:text-ink"
             >
               <svg viewBox="0 0 24 24" class="size-4" fill="currentColor" aria-hidden="true"><path d={c.icon} /></svg>
