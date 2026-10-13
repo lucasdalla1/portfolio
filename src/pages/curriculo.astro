@@ -1,0 +1,112 @@
+---
+// Versão para impressão do currículo. O PDF em public/curriculo.pdf é gerado
+// a partir desta página por scripts/curriculo.mjs (pnpm curriculo).
+import '../styles/global.css';
+import { site, experience } from '../data/site';
+import { curriculo, cvExperience } from '../data/curriculo';
+
+const url = (href: string) => href.replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/$/, '');
+const contatos = [
+  { label: url(Astro.site!.href), href: Astro.site!.href },
+  { label: url(site.links.github), href: site.links.github },
+  { label: url(site.links.linkedin), href: site.links.linkedin },
+];
+const h2 = 'mb-1.5 border-b border-line pb-0.5 text-[0.95rem] font-semibold text-accent';
+---
+
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Currículo — {site.name}</title>
+    <style>
+      @page { size: A4; margin: 12mm 14mm; }
+      html { font-size: 9.5pt; }
+      /* Sem ligaduras: "fi"/"fl" juntos viram letra faltando na leitura do PDF */
+      body { background: white; font-variant-ligatures: none; font-feature-settings: 'liga' 0, 'clig' 0; }
+      @media screen {
+        body { background: var(--surface); }
+        .folha { max-width: 210mm; min-height: 297mm; margin: 2rem auto; padding: 12mm 14mm; background: white; box-shadow: 0 2px 24px rgb(0 0 0 / 0.08); }
+      }
+      a { color: inherit; text-decoration: none; }
+    </style>
+  </head>
+  <body class="text-ink">
+    <main class="folha leading-snug">
+      <header>
+        <h1 class="text-[1.6rem] font-bold tracking-[-0.02em]">{site.name}</h1>
+        <p class="mt-0.5 text-[1.05rem] font-medium">{curriculo.headline}</p>
+        <p class="mt-1.5 text-muted">
+          {curriculo.location} · <a href={`mailto:${site.email}`}>{site.email}</a>
+        </p>
+        <p class="text-muted">
+          {contatos.map((c, i) => <>{i > 0 && ' · '}<a href={c.href}>{c.label}</a></>)}
+        </p>
+      </header>
+
+      <section class="mt-3.5">
+        <h2 class={h2}>Resumo</h2>
+        <p>{curriculo.summary}</p>
+      </section>
+
+      <section class="mt-3.5">
+        <h2 class={h2}>Experiência</h2>
+        <div class="grid gap-3">
+          {experience.map((e) => {
+            const cv = cvExperience[e.role];
+            return (
+              <article class="break-inside-avoid">
+                <div class="flex items-baseline justify-between gap-4">
+                  <h3 class="font-semibold">{e.role} — {e.company}</h3>
+                  <p class="shrink-0 text-muted">{e.period}</p>
+                </div>
+                <p class="mt-0.5 text-muted">{cv?.description ?? e.description}</p>
+                <ul class="mt-1 grid list-disc gap-0.5 pl-4">
+                  {(cv?.bullets ?? e.highlights.map((h) => ({ title: h.title, text: h.summary }))).map((b) => (
+                    <li class="marker:text-accent">
+                      {b.title && <span class="font-medium">{b.title}: </span>}{b.text}
+                    </li>
+                  ))}
+                </ul>
+                <p class="mt-1 text-muted">Stack: {e.stack.join(', ')}.</p>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section class="mt-3.5 break-inside-avoid">
+        <h2 class={h2}>Competências técnicas</h2>
+        <dl class="grid grid-cols-[8.5rem_1fr] gap-x-3 gap-y-0.5">
+          {curriculo.skills.map((s) => (
+            <>
+              <dt class="font-medium">{s.group}</dt>
+              <dd>{s.items.join(', ')}.</dd>
+            </>
+          ))}
+        </dl>
+      </section>
+
+      <section class="mt-3.5 break-inside-avoid">
+          <h2 class={h2}>Formação</h2>
+          <ul class="grid gap-0.5">
+            {curriculo.education.map((f) => (
+              <li>
+                <span class="font-medium">{f.course}</span>
+                <span class="text-muted"> — {f.school} · {f.period}{f.note && ` (${f.note})`}</span>
+              </li>
+            ))}
+          </ul>
+      </section>
+
+      <section class="mt-3.5 break-inside-avoid">
+          <h2 class={h2}>Idiomas</h2>
+          <ul class="grid gap-0.5">
+            {curriculo.languages.map((l) => <li>{l}</li>)}
+          </ul>
+      </section>
+    </main>
+  </body>
+</html>
