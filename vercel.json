@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "headers": [
+    {
+      "source": "/curriculo.pdf",
+      "headers": [{ "key": "Content-Disposition", "value": "inline; filename=\"Curriculo-Lucas-Dalla.pdf\"" }]
+    }
+  ]
+}
